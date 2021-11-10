@@ -94,7 +94,61 @@ for token in R.see():
 The code
 --------
 
-### Grabbing a silver token ###
+### Finding and grabbing a silver token ###
+
+While the robot moves along the path, it also look for all the silver tokens, and tries to grab them and move them behind him. First he sees if there is a token in front of him, using this function:
+
+
+```python
+def look_for_silver_token(angle):  
+    """
+    Function to see if there is a silver token in front of the robot
+
+    Returns:
+	silverTokenForward (bool): presence of a silver token
+    """
+    silverTokenForward = False
+    for token in R.see():
+        if -angle<=token.rot_y<=angle and token.info.marker_type is MARKER_TOKEN_SILVER:
+            silverTokenForward = True
+    return silverTokenForward
+```
+
+Then, if something is found, he gets the how far the token is and how much he should turn in order to reach it, using the return values of this function:
+
+
+```python
+def find_silver_token():
+    """
+    Function to find the closest silver token
+
+    Returns:
+	dist (float): distance of the closest silver token (-1 if no silver token is detected)
+	rot_y (float): angle between the robot and the silver token (-1 if no silver token is detected)
+    """
+    dist=100
+    for token in R.see():
+        if token.dist < dist and token.info.marker_type is MARKER_TOKEN_SILVER:
+            dist=token.dist
+	    rot_y=token.rot_y
+    if dist==100:
+	    return -1, -1
+    else:
+   	    return dist, rot_y
+```
+After that, the robot goes towards the token, avoiding all the golden token.
+
+The following code is used to approach the silver token:
+
+```python
+a_th = 4.0
+""" float: Threshold for the control of the linear distance"""
+
+if rot_y < -a_th: # if the robot is not well aligned with the token, we slightly move it on the left or on the right
+  turn(-2, 0.1)
+elif rot_y > a_th:
+  turn(+2, 0.1)
+```
 
 
 [sr-api]: https://studentrobotics.org/docs/programming/sr/
