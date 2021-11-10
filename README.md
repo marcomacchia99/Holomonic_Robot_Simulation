@@ -1,5 +1,7 @@
-Python Robotics Simulator
+Assignment 1 - Research Track 1
 ================================
+
+Introduction
 
 This is a simple, portable robot simulator developed by [Student Robotics](https://studentrobotics.org).
 Some of the arenas and the exercises have been modified for the Research Track I course
