@@ -2,6 +2,16 @@ Assignment 1 - Research Track 1
 ================================
 
 Introduction
+------------
+
+In this assignment we are asked to let the robot `constantly drive around the circuit in the counter-clockwise direction`, `avoiding all the gold boxes`. When a silver token in found along the path, the robot should also `grab it and move it behind himself.`
+
+The key features are:
+
+* `The movement of the robot`: it should drive in the counter-clockwise direction around a circuit, which depends on the "Arena" that was already given; 
+* `Keeping the robot away from the walls`: it must avoid touching the golden boxes, which delimit the perimeter of the circuit;
+* `The management of silver boxes`: when the robot is close to a silver box, it should grab it and move it behind itself.
+
 
 This is a simple, portable robot simulator developed by [Student Robotics](https://studentrobotics.org).
 Some of the arenas and the exercises have been modified for the Research Track I course
