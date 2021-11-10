@@ -16,6 +16,7 @@ border_th = 0.55
 """ float: Threshold for the control of the linear distance from the lateral border of the arena"""
 
 drive_v = 40
+""" int: Linear velocity of the robot"""
 
 R = Robot()
 """ instance of the class Robot"""
@@ -87,7 +88,7 @@ def find_golden_token():
 
 def see_forward():
     """
-    Function to find the closest golden token
+    Function to look in front of the robot
 
     Returns:
 	dist (float): distance of the closest golden token (-1 if no golden token is detected)
@@ -117,6 +118,9 @@ def look_for_silver_token(angle):
     return silverTokenForward
 
 def align_to_next_silver_token(turn_direction): 
+    """
+    Function to align to the next silver token after a turn
+    """    
     
     if not look_for_silver_token(35): return
     else:
@@ -222,9 +226,9 @@ while 1:
                 else:
                     print("Aww, I'm not close enough.")
                     drive(drive_v , 0.1)
-            elif rot_y<-30 or rot_y>30 or-a_th<= rot_y <= a_th:
+            elif rot_y<-30 or rot_y>30 or-a_th<= rot_y <= a_th: #if a silver token is found behind or if the robot is well aligned with the next silver token we let it move straight
                 drive(drive_v , 0.1)
-            elif rot_y < -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
+            elif rot_y < -a_th: # if the robot is not well aligned with the token, we slightly move it on the left or on the right
                 print("Left a bit...")
                 turn(-2, 0.1)
             elif rot_y > a_th:
