@@ -94,7 +94,13 @@ for token in R.see():
 The code
 --------
 
-### Finding and grabbing a silver token ###
+
+### drive around the circuit ###
+In order to successfully drive around the circuit, we must 
+
+### Avoiding golden boxes ###
+
+### Finding and grabbing a silver box ###
 
 While the robot moves along the path, it also look for all the silver tokens, and tries to grab them and move them behind him. First he sees if there is a token in front of him, using this function:
 
@@ -144,11 +150,41 @@ The following code is used to approach the silver token:
 a_th = 4.0
 """ float: Threshold for the control of the linear distance"""
 
-if rot_y < -a_th: # if the robot is not well aligned with the token, we slightly move it on the left or on the right
+if rot_y<-30 or rot_y>30 or-a_th<= rot_y <= a_th: 
+# if a silver token is found behind or if the robot 
+# is well aligned with the next silver token we let it move straight
+  drive(drive_v , 0.1)
+  
+# if the robot is not well aligned with the token, 
+# we slightly move it on the left or on the right  
+elif rot_y < -a_th: 
   turn(-2, 0.1)
 elif rot_y > a_th:
   turn(+2, 0.1)
 ```
+
+When the robot is at least at 0.4 meters from the token, he's able to grab it and move it behind himself using this code:
+
+```python
+d_th = 0.4
+""" float: Threshold for the control of the orientation"""
+
+if dist <d_th and -a_th<= rot_y <= a_th : # if we are close to the token, we try grab it.
+                print("Found it!")
+                if R.grab(): 
+		# if we grab the token, we move the robot forward and on the right, 
+		# we release the token, and we go back to the initial position
+                    print("Gotcha!")
+                    turn(30, 2)
+                    R.release()
+                    drive(-20,1)
+                    turn(-30,2)
+            
+                else:
+                    print("Aww, I'm not close enough.")
+                    drive(drive_v , 0.1)
+```
+
 
 
 [sr-api]: https://studentrobotics.org/docs/programming/sr/
