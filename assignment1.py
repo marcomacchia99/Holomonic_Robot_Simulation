@@ -127,23 +127,32 @@ def align_to_next_silver_token(turn_direction):
         silv_tok=None
         unreachable = []
         dist=100
+        
+        # creates a list of unreachable silver tokens, that must be ignored
         for token1 in R.see():
                 if token1.info.marker_type is MARKER_TOKEN_SILVER:
                     for token in R.see():
                         if -token1.rot_y-0.5<=token.rot_y<=token1.rot_y+0.5 and token.dist<token1.dist and token.info.marker_type is MARKER_TOKEN_GOLD:
                             unreachable.append(token.info.code)
                             break
+                        
+        # extra vision to one side or another according to the turn direction
+        # in order to manage unexpected turn behavior              
         lower_angle_limit = -35 - 20 if turn_direction==1 else 0
         upper_angle_limit = 35 + 20 if turn_direction==-1 else 0
+        
+        
+        # look for the nearest reachable silver token
         for token in R.see():
                 if lower_angle_limit<=token.rot_y<=upper_angle_limit and token.dist<dist and not token.info.code in unreachable and token.info.marker_type is MARKER_TOKEN_SILVER:
                     dist=token.dist
                     silv_tok=token
-                    break                
+                    break 
+                               
         if silv_tok==None: return
-        print("Aligning with next token...")
-        print(dist)
-        print(silv_tok.rot_y)            
+        
+        
+        print("Aligning with next token...")        
         while silv_tok.rot_y < -0.5 or silv_tok.rot_y > 0.5: 
                 if silv_tok.rot_y < -0.5: # if the robot is not well aligned with the token, we move it on the left or on the right
                     turn(-2, 0.1)
@@ -163,8 +172,8 @@ def detect_angle():
     Returns:
 	direction (int): 1 if it has to turn clockwise, -1 if counterclockwise 
     """
-    distCcw=100
-    distCw=100
+    distCcw=100 #distance counterclockwise
+    distCw=100 #distance clockwise
     for token in R.see():
         if  70<=token.rot_y<=110  and token.dist < distCw and token.info.marker_type is MARKER_TOKEN_GOLD:
             distCw=token.dist
@@ -198,8 +207,6 @@ while 1:
     dist,rot_y = see_forward()
     if dist <g_th and -20<rot_y<20:
         print("Angle! I'm turning...")
-        print(dist)
-        print(rot_y)
         direction = detect_angle()
     	if direction==1:
             turn(17,2)
