@@ -289,6 +289,8 @@ if dist <d_th and -a_th<= rot_y <= a_th : # if we are close to the token, we try
                     drive(drive_v , 0.1)
 ```
 
+## Flowchart ##
 
+<img src="https://github.com/marcomacchia99/ResearchTrack1/blob/main/assets/diagram.png" alt="drawing" width="200"/>
 
 [sr-api]: https://studentrobotics.org/docs/programming/sr/
