@@ -96,9 +96,98 @@ The code
 
 
 ### drive around the circuit ###
-In order to successfully drive around the circuit, we must 
+In order to successfully drive around the circuit, the robot must have the capability of recognize and manage an angle.
+
+To do so, the function `see_forward()` is called. This function returns the minimum distance of a golden box found in front of the robot. If the distance is less than `g_th = 1.0`, the robot is going towards a wall, which means he's approaching an angle.
+
+The program also implements a function called `detect_angle()` which recognize the type of angle (need to turn left or turn right) and returns the turn direction.
+
+Here's how it's implemented:
+
+```python
+def detect_angle():
+    """
+    Function to understand how an angle is made and how the robot should turn
+
+    Returns:
+	direction (int): 1 if it has to turn clockwise, -1 if counterclockwise 
+    """
+    distCcw=100 #distance counterclockwise
+    distCw=100 #distance clockwise
+    for token in R.see():
+        if  70<=token.rot_y<=110  and token.dist < distCw and token.info.marker_type is MARKER_TOKEN_GOLD:
+            distCw=token.dist
+        elif -110<=token.rot_y<=-90  and token.dist < distCcw and token.info.marker_type is MARKER_TOKEN_GOLD:
+            distCcw=token.dist         
+    if distCw==100:
+	    return -1
+    else:
+        if distCw>distCcw:
+            return 1
+        else:
+            return -1
+```
+
+After doing that, the robot turns according to the retrun value of the last described function.
+
+Immediately after, the robot aligns himself with the next reachable silver token, if present, using a function called `align_to_next_silver_token(direction)`:
+
+```python
+def align_to_next_silver_token(turn_direction): 
+    """
+    Function to align to the next silver token after a turn
+    """    
+    
+    if not look_for_silver_token(35): return
+    else:
+        silv_tok=None
+        unreachable = []
+        dist=100
+        
+        # creates a list of unreachable silver tokens, that must be ignored
+        for token1 in R.see():
+                if token1.info.marker_type is MARKER_TOKEN_SILVER:
+                    for token in R.see():
+                        if -token1.rot_y-0.5<=token.rot_y<=token1.rot_y+0.5 and token.dist<token1.dist
+			   and token.info.marker_type is MARKER_TOKEN_GOLD:
+                            unreachable.append(token.info.code)
+                            break
+                        
+        # extra vision to one side or another according to the turn direction
+        # in order to manage unexpected turn behavior              
+        lower_angle_limit = -35 - 20 if turn_direction==1 else 0
+        upper_angle_limit = 35 + 20 if turn_direction==-1 else 0
+        
+        
+        # look for the nearest reachable silver token
+        for token in R.see():
+                if lower_angle_limit<=token.rot_y<=upper_angle_limit and token.dist<dist 
+		   and not token.info.code in unreachable and token.info.marker_type is MARKER_TOKEN_SILVER:
+                    dist=token.dist
+                    silv_tok=token
+                    break 
+                               
+        if silv_tok==None: return
+        
+        
+        print("Aligning with next token...")
+	
+	# if the robot is not well aligned with the token, we move it on the left or on the right
+        while silv_tok.rot_y < -0.5 or silv_tok.rot_y > 0.5: 
+                if silv_tok.rot_y < -0.5: 
+                    turn(-2, 0.1)
+                elif silv_tok.rot_y > 0.5:
+                    turn(+2, 0.1)
+                for token in R.see():
+                    if -35<=token.rot_y<=35 and token.dist<dist and token.info.marker_type is MARKER_TOKEN_SILVER:
+                     silv_tok=token
+    print("Alignment complete!")                              
+    return 
+```
 
 ### Avoiding golden boxes ###
+
+
 
 ### Finding and grabbing a silver box ###
 
