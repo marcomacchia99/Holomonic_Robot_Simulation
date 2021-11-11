@@ -215,7 +215,7 @@ while 1:
         align_to_next_silver_token(direction)
         
     else:	           
-        #if no silver token found just go straight
+        # if no silver token found just go straight
         if not look_for_silver_token(20):
             drive(drive_v , 0.1)
         else:
