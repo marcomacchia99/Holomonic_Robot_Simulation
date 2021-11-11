@@ -296,4 +296,6 @@ if dist <d_th and -a_th<= rot_y <= a_th : # if we are close to the token, we try
 Video demonstration
 -------------------
 
+![alt text](https://github.com/marcomacchia99/ResearchTrack1/blob/main/assets/demonstration.gif)
+
 [sr-api]: https://studentrobotics.org/docs/programming/sr/
