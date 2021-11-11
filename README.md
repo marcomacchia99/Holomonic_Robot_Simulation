@@ -187,7 +187,22 @@ def align_to_next_silver_token(turn_direction):
 
 ### Avoiding golden boxes ###
 
+the robot is capable of correct himself if he's going towards a "wall". Every tenth of a second the robot check where the closest golden box is. If it is closer than `border_th = 0.55`, it makes a quick turn in the opposite direction and goes away from that box. Here's how he does it:
 
+```python
+dist,rot_y = find_golden_token()         
+    if dist <border_th:
+        if 0<rot_y<150:
+            print(rot_y)
+            print("Danger! Left a bit...")
+            turn(-45, 0.2)
+            drive(20,0.5)
+        elif -150<rot_y<0:
+            print(rot_y)
+            print("Danger! Right a bit...")
+            turn(45, 0.2)
+            drive(20,0.5)
+```
 
 ### Finding and grabbing a silver box ###
 
